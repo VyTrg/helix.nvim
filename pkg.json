@@ -1,11 +1,11 @@
 {
-	"name": "kak.nvim",
-	"description": "Select -> action. Kakoune workflow and most keybinds for Neovim.",
+	"name": "helix.nvim",
+	"description": "Select -> action. Helix workflow and keybinds for Neovim.",
 	"engines": {
-		"nvim": ">=0.7.0"
+		"nvim": ">=0.12.5"
 	},
 	"repository": {
 		"type": "git",
-		"url": "https://codeberg.org/mirge/kak.nvim"
+		"url": "https://github.com/VyTrg/helix.nvim"
 	}
 }

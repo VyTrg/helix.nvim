@@ -1,147 +1,196 @@
-# kak.nvim - Kakoune-like keybinds for Neovim
+# helix.nvim
 
-Changes keybinds in Neovim to use the Kakoune workflow
+[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+[![Neovim](https://img.shields.io/badge/Neovim-0.7+-green.svg?logo=neovim)](https://neovim.io)
 
-## Prerequisites
+**helix.nvim** brings the modern, selection-first modal editing workflow and keybindings inspired by the [Helix editor](https://helix-editor.com/) to Neovim.
 
-- Neovim 0.7+
+> [!NOTE]
+> **Open Source Attribution**: `helix.nvim` is a fork of [`kak.nvim`](https://github.com/mirlge/kak.nvim) by [mirge](https://github.com/mirlge). This project builds on `kak.nvim`'s foundation and is evolving towards full Helix editor integration and keybinding parity in Neovim under the [GNU General Public License v3.0](LICENSE).
 
-## Installation
+---
 
-### [💤 lazy.nvim](https://github.com/folke/lazy.nvim)
+## 💡 The Helix Philosophy: Selection → Action
 
-#### From [the Codeberg repo](https://codeberg.org/mirge/kak.nvim) (recommended)
+In standard Vim / Neovim, editing follows an **Action → Motion** pattern (e.g., `dw` to delete a word, `ci"` to change inside quotes). You commit to an operation before visually confirming the target.
+
+Helix inverts this model to **Selection → Action**:
+1. **Select** the text first (e.g., `w` to select a word, `x` to select a line).
+2. Inspect the highlighted selection.
+3. Apply the **action** (e.g., `d` to delete, `c` to change, `y` to yank).
+
+This interactive paradigm provides immediate visual feedback, minimizes editing mistakes, and makes complex manipulations intuitive.
+
+---
+
+## ⚡ Prerequisites
+
+- **Neovim** >= 0.7.0
+- *(Optional)* [which-key.nvim](https://github.com/folke/which-key.nvim) for interactive keybinding popups and text object discovery.
+
+---
+
+## 📦 Installation
+
+### [💤 lazy.nvim](https://github.com/folke/lazy.nvim) (Recommended)
 
 ```lua
 {
-  "kak.nvim",
-  url = "https://codeberg.org/mirge/kak.nvim.git",
-  --version = "^7", -- if you don't want breaking changes
-  event = "VeryLazy", -- load after other plugins, to avoid conflicts
+  "VyTrg/helix.nvim",
+  event = "VeryLazy", -- load after other plugins to avoid conflicts
   opts = {
-    -- your configuration here
+    -- configuration options (see below)
   },
 }
 ```
 
-#### From [the GitHub repo](https://github.com/mirlge/kak.nvim)
+With `which-key.nvim` integration:
 
 ```lua
 {
-  "mirlge/kak.nvim",
-  --version = "^7", -- if you don't want breaking changes
-  event = "VeryLazy", -- load after other plugins, to avoid conflicts
+  "VyTrg/helix.nvim",
+  dependencies = { "folke/which-key.nvim" },
+  event = "VeryLazy",
   opts = {
-    -- your configuration here
+    which_key_integration = true,
   },
 }
 ```
 
-#### From [the Radicle repo](https://radicle.network/nodes/rosa.radicle.network/rad:z38WdNjkBrNQRPBXQ5DNvU6UfG8U5) (requires the [Radicle](https://radicle.dev) CLI to be installed)
+### [packer.nvim](https://github.com/wbthomason/packer.nvim)
 
 ```lua
-{
-  "kak.nvim",
-  url = "rad://z38WdNjkBrNQRPBXQ5DNvU6UfG8U5",
-  --version = "^7", -- if you don't want breaking changes
-  event = "VeryLazy", -- load after other plugins, to avoid conflicts
-  opts = {
-    -- your configuration here
-  },
-}
-```
-
-## Setup (if necessary)
-
-```lua
--- you don't have to pass in the table to the setup function
-require("kak").setup({
-  -- your configuration here
+use({
+  "VyTrg/helix.nvim",
+  config = function()
+    require("helix").setup({
+      -- your configuration here
+    })
+  end,
 })
 ```
 
-## [WhichKey](https://github.com/folke/which-key.nvim) integration
+### [vim-plug](https://github.com/junegunn/vim-plug)
 
-Add this to the plugin spec:
-
-```lua
-dependencies = { "folke/which-key.nvim" },
+```vim
+Plug 'VyTrg/helix.nvim'
+" In your init.lua / config:
+lua require("helix").setup()
 ```
 
-## Default options
+---
+
+## ⚙️ Setup & Configuration
+
+Calling `setup()` is optional if you use `lazy.nvim` with `opts = {}`. Otherwise, invoke it in your configuration:
 
 ```lua
-{
-  full = true,     -- if set to false, it disables all keybinds except Normal mode c, d, x, y
-  which_key_integration = true, -- which-key text objects integration
+require("helix").setup({
+  -- Default configuration:
+  full = true,                  -- Enable full Helix keybind suite (if false, only remaps c, d, x, y)
+  which_key_integration = true, -- Enable which-key text objects and goto integration
 
-  experimental = { -- experimental features
-    rebind_visual_aiAI = false, -- if set to true, rebinds Visual mode `[aiAI]` keybinds to act like they do in Normal mode,
-  }                             -- except that `[ai]` goes to the corresponding end of the selection. however, this
-}                               -- makes it so you can only use the default keybinds with `<A-[ai]>`
+  experimental = {
+    rebind_visual_aiAI = false, -- If true, rebinds Visual mode [aiAI] to insert/append at selection boundaries
+  },
+})
 ```
 
-## Usage
+---
 
-### Rebound keybinds
+## ⌨️ Keybindings Reference
 
-#### Normal mode
+### Core Actions (Normal Mode)
 
-- `c` -> `vc`
-- `d` -> `vd`
-- `x` -> `V`
-- `y` -> `vy`
+| Key | Helix Action | Neovim Equivalent | Description |
+|:---:|:---|:---|:---|
+| `c` | Change | `vc` | Select current character and enter insert mode |
+| `d` | Delete | `vd` | Delete current character/selection |
+| `x` | Select Line | `V` | Select the current line (or expand selection by lines) |
+| `y` | Yank | `vy` | Yank current character/selection |
 
-#### Full mode
+### Navigation & Selections (`full = true`)
 
-- `<A-[ft]>`: Extend selection backwards with the key
-- `[HJKLWBEFT]`: Extend selection with the lowercase key
-- `<A-[ai]>`: Around/inside
-- `[hjkl]`: Exit Visual mode first
-- `[wbeft]`: Create new selection with key
-- `<A-[wbe]>`: Extend selection with the key
-- `<A-j>`: Join lines
-- `<A-[hl]>`: Create new selection going all the way to the corresponding end
-  of the line
-- `g[hl]`: Go all the way to the corresponding end of the line
-- `g[ge]`: Jump to buffer start/end
-- `g[tcb]`: \<key at the same place in `[HML]`>, but exit Visual mode first
-- `g[jk]`: Jump to buffer bottom/top
-- `G[hl]`: Extend selection all the way to the corresponding end of the line
-- `G[ge]`: Extend selection to buffer start/end
-- `G[tcb]`: \<key at the same place in `[HML]`>, but extend selection
-- `G[jk]`: Extend selection to buffer bottom/top
-- `<A-[oO]>`: Do the same as `[oO]`, except that they move the cursor to the
-  same position that it was in before they were executed, or, in Visual mode,
-  reselect the previous Visual mode selection
+#### Basic Movement
+- `h`, `j`, `k`, `l` — Move cursor (clears current visual selection before moving).
+- `H`, `J`, `K`, `L` — **Extend** selection left, down, up, or right.
 
-##### Normal mode
+#### Word Motions
+- `w`, `e`, `b` — Move to and select next word start, word end, or previous word start.
+- `W`, `E`, `B` — **Extend** selection to next word start, word end, or previous word start.
+- `<A-w>`, `<A-e>`, `<A-b>` — WORD (whitespace-delimited) variants: select / extend.
 
-- `R`: Replace the character which the cursor is on with yanked content
+#### Character Search
+- `f<char>` — Find `<char>` forward (creates selection to character).
+- `t<char>` — Till `<char>` forward (creates selection up to character).
+- `F<char>`, `T<char>` — **Extend** selection forward to / till `<char>`.
+- `<A-f><char>`, `<A-t><char>` — Find / till backward (extends selection).
 
-##### Visual mode
+#### Line & Buffer Navigation
+- `<A-h>`, `<A-l>` — Select from cursor to start (`0`) or end (`$`) of line.
+- `gh`, `gl` — Go to start or end of line (exits visual selection first).
+- `Gh`, `Gl` — **Extend** selection to start or end of line.
+- `gg`, `ge` — Go to buffer start or buffer end.
+- `Gg`, `Ge` — **Extend** selection to buffer start or buffer end.
+- `gj`, `gk` — Jump to buffer bottom or buffer top.
+- `Gj`, `Gk` — **Extend** selection to buffer bottom or buffer top.
+- `gt`, `gc`, `gb` — Go to top, center, or bottom of screen view.
+- `Gt`, `Gc`, `Gb` — **Extend** selection to top, center, or bottom of screen view.
 
-- `[ai]`: If experimental option `rebind_visual_aiAI` is enabled, append/insert
-  (to Insert mode) on the corresponding end of the selection
-- `[pP]`: Paste at the corresponding end of the selection
-- `R`: Replace selection with yanked content
-- `<A-;>`: Goes to the other end of the selection
-- `[oO]`: Do the same thing as they do in Normal mode, on their corresponding
-  end of the selection
+#### Manipulation & Paste
+- `<A-j>` — Join lines (`J`).
+- `<A-;>` — Flip selection cursor (move cursor to the other end of the selection).
+- `p`, `P` — Paste (in Visual mode, pastes at the corresponding end of selection).
+- `R` — In Normal mode: replace character with clipboard; in Visual mode: replace entire selection with clipboard.
+- `o`, `O` — Open newline below / above.
+- `<A-o>`, `<A-O>` — Add newline below / above without moving cursor / disturbing selection.
 
-## TODO
+#### Text Objects
+- `<A-i><obj>` — Select *inside* text object (e.g. `<A-i>w` for inner word, `<A-i>"` for inside quotes).
+- `<A-a><obj>` — Select *around* text object (e.g. `<A-a>w` around word).
 
-- [X] Readd `<A-[ai]>` keybinds
-  - [X] Readd only the `<A-[ai]>` keybinds
-  - [X] Readd key rebind of Visual mode `[aiAI]` keybinds, but as experimental opt-in
-- [X] Add `G` keybinds (`g`, but extends selection)
-  - [X] Make all `g` keybinds leave Visual mode before executing them
+---
 
-## Contributing
+## 🗺️ Roadmap towards Full Helix Integration
 
-Pull requests are welcome. For major changes, please open an issue first
-to discuss what you would like to change.
+`helix.nvim` aims to bring complete Helix modal editing capabilities to Neovim:
 
-## License
+- [x] Helix selection-first primitives (`c`, `d`, `x`, `y`)
+- [x] Helix movement and extension keys (`[HJKL]`, `[WEB]`, `[FT]`)
+- [x] Goto navigation (`g` and `G` extend family)
+- [x] Which-key integration for text objects and goto motions
+- [ ] Match mode (`m` / `M`) integration (matching brackets, surrounding pairs)
+- [ ] View mode (`z` / `Z`) integration (scroll center, top, bottom)
+- [ ] Multi-cursor / multi-selection workflows (Helix `s`, `S`, `C`, `alt-s`)
+- [ ] Treesitter-based selection expansion (`[` and `]` family)
 
-[GPL-3.0](https://choosealicense.com/licenses/gpl-3.0/)
+---
+
+## 🛠️ Local Development
+
+A development runner script is provided in `./dev`:
+
+```bash
+./dev/dev.sh [file]
+```
+
+This launches a clean, isolated Neovim instance with `helix.nvim` loaded from the local repository.
+
+---
+
+## 🤝 Contributing
+
+Contributions, bug reports, and suggestions are welcome!
+- For major architectural changes or keymap additions, please open an issue first to discuss the design.
+- Pull requests should adhere to existing Lua formatting conventions.
+
+---
+
+## 📜 License & Acknowledgments
+
+This project is licensed under the **GNU General Public License v3.0** — see the [LICENSE](LICENSE) file for details.
+
+### Acknowledgments
+
+- **[kak.nvim](https://github.com/mirlge/kak.nvim)**: Original project by [mirge](https://github.com/mirlge) / [mirlge](https://codeberg.org/mirge/kak.nvim), from which `helix.nvim` was forked.
+- **[Helix Editor](https://helix-editor.com/)**: For the inspiring modal editor design and selection-first paradigm.
