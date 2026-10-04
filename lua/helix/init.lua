@@ -1,3 +1,8 @@
+-- ============================================================================
+-- WARNING: helix.nvim is in early development and not yet officially released.
+-- Features, APIs, and keybindings are subject to breaking changes.
+-- ============================================================================
+
 local M = {}
 
 local defaults = require("helix.defaults")

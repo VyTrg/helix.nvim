@@ -5,6 +5,9 @@
 
 **helix.nvim** brings the modern, selection-first modal editing workflow and keybindings inspired by the [Helix editor](https://helix-editor.com/) to Neovim.
 
+> [!WARNING]
+> **Under Active Development**: This project is in an early development stage and has **not been released yet**. Features, APIs, and keybindings are experimental, actively evolving, and subject to breaking changes.
+
 > [!NOTE]
 > **Open Source Attribution**: `helix.nvim` is a fork of [`kak.nvim`](https://github.com/mirlge/kak.nvim) by [mirge](https://github.com/mirlge). This project builds on `kak.nvim`'s foundation and is evolving towards full Helix editor integration and keybinding parity in Neovim under the [GNU General Public License v3.0](LICENSE).
 
