@@ -1,38 +1,41 @@
 local utils = require("helix.utils")
 local wk = require("which-key")
 
-local wk_add_base = { mode = { "n", "x" } }
-local function wk_base_add_key(key)
-	wk.add(vim.list_extend(wk_add_base, { key }))
-end
-
 local function text_objects()
-	local wk_text_objects = require("which-key.plugins.presets").text_objects
-	table.insert(wk_text_objects.mode, "n")
+	local ok, presets = pcall(require, "which-key.plugins.presets")
+	if not ok or not presets.text_objects then
+		return
+	end
+	local wk_text_objects = presets.text_objects
+	if not vim.tbl_contains(wk_text_objects.mode or {}, "n") then
+		table.insert(wk_text_objects.mode, "n")
+	end
 
 	for _, keybind in ipairs(wk_text_objects) do
 		local keybind_str = keybind[1]
-		if string.len(keybind_str) == 1 then
-			keybind[1] = "<A-" .. keybind_str .. ">"
-		else
-			keybind[1] = "<A-" .. string.sub(keybind_str, 1, 1) .. ">" .. string.sub(keybind_str, 2)
+		if keybind_str and not vim.startswith(keybind_str, "<A-") then
+			if string.len(keybind_str) == 1 then
+				keybind[1] = "<A-" .. keybind_str .. ">"
+			else
+				keybind[1] = "<A-" .. string.sub(keybind_str, 1, 1) .. ">" .. string.sub(keybind_str, 2)
+			end
 		end
 	end
 end
 
 local function goto_extend()
-	local wk = require("which-key")
-	local wk_motions = require("which-key.plugins.presets").motions
-	local idx = 0
-	for i, val in ipairs(wk_motions) do
-		if val[1] == "G" then
-			idx = i
+	local ok, presets = pcall(require, "which-key.plugins.presets")
+	if ok and presets.motions then
+		for _, val in ipairs(presets.motions) do
+			if val[1] == "G" then
+				val.desc = nil
+				val.group = "Goto extend"
+				val[2] = function()
+					require("which-key").show({ keys = "G" })
+				end
+				break
+			end
 		end
-	end
-	wk_motions[idx].desc = nil
-	wk_motions[idx].group = "Goto extend"
-	wk_motions[idx][2] = function()
-		require("which-key").show({ keys = "G" })
 	end
 
 	local keys = {
@@ -46,15 +49,20 @@ local function goto_extend()
 		{ "gh", desc = "Go all the way to the left of the current line" },
 		{ "gl", desc = "Go all the way to the right of the current line" },
 	}
+
+	local specs = {
+		mode = { "n", "x" },
+		{ "%", desc = "Select all (Helix style)" },
+		{ "<C-c>", desc = "Toggle comment" },
+	}
 	for _, key in ipairs(keys) do
-		wk_base_add_key(key)
-		local key_extend = vim.tbl_extend("keep", key, {})
-		local key_extend_str = utils.keymap.presets.goto_extend.Lhs_key_func(key[1])
-		key_extend[1] = key_extend_str
-		wk_base_add_key(key_extend)
-		--[[table.insert(wk_motions, { key })
-    table.insert(wk_motions, { utils.keymap.presets.goto_extend.Lhs_key_func(key) })]]
+		table.insert(specs, vim.deepcopy(key))
+		local key_extend = vim.deepcopy(key)
+		key_extend[1] = utils.keymap.presets.goto_extend.Lhs_key_func(key[1])
+		table.insert(specs, key_extend)
 	end
+
+	wk.add(specs)
 end
 
 text_objects()

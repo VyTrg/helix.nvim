@@ -7,8 +7,11 @@ function M.setup(opts)
 
 	require("helix.keybinds").setup(opts)
 
-	if opts.full and package.loaded["which-key"] ~= nil then
-		require("helix.which-key-integration")
+	if opts.full and opts.which_key_integration then
+		local ok, _ = pcall(require, "which-key")
+		if ok then
+			require("helix.which-key-integration")
+		end
 	end
 end
 

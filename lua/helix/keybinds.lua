@@ -61,6 +61,18 @@ function M.setup(opts)
 			vim.keymap.set("x", utils.wrap_key(key[1]), "<Esc>`" .. key[2] .. key[1] .. "<Esc>gv")
 		end
 		utils.keymap.set({ { "<A-;>", "o" } }, { presets = { "nonormal" } })
+
+		-- select all (Helix style)
+		vim.keymap.set({ "n", "x" }, "%", "ggVG", { desc = "Select all (Helix style)", remap = false })
+
+		-- choose with '' quote
+		-- Note: use mode 'x' instead of 'v' so it does not override Select mode in LazyVim (used by snippet engines)
+		vim.keymap.set({ "x", "o" }, "i'", "i'", { desc = "Inside single quote", remap = false })
+		vim.keymap.set({ "x", "o" }, "a'", "a'", { desc = "Around single quote", remap = false })
+
+		-- helix comment toggle
+		vim.keymap.set("n", "<C-c>", "gcc", { remap = true, desc = "Toggle comment line" })
+		vim.keymap.set("x", "<C-c>", "gc", { remap = true, desc = "Toggle comment selection" })
 	end
 
 	for _, key in ipairs({ "d", "c", "y" }) do

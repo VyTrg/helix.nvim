@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 - Refactored module namespace to `helix` (`require("helix")`).
 - Updated documentation and README for Helix modal workflow, keybinding reference, and plugin managers (`lazy.nvim`, `packer.nvim`, `vim-plug`).
 - Integrated Which-Key support for Helix navigation and text objects.
+- Added buffer select-all (`%`), comment toggle (`<C-c>`), and single-quote text objects (`i'`, `a'`).
 
 ## [Previous Releases (kak.nvim)]
 

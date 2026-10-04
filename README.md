@@ -136,8 +136,10 @@ require("helix").setup({
 - `Gj`, `Gk` — **Extend** selection to buffer bottom or buffer top.
 - `gt`, `gc`, `gb` — Go to top, center, or bottom of screen view.
 - `Gt`, `Gc`, `Gb` — **Extend** selection to top, center, or bottom of screen view.
+- `%` — **Select all** buffer (`ggVG`).
 
 #### Manipulation & Paste
+- `<C-c>` — Toggle comment on current line (`gcc` in Normal mode) or selection (`gc` in Visual mode).
 - `<A-j>` — Join lines (`J`).
 - `<A-;>` — Flip selection cursor (move cursor to the other end of the selection).
 - `p`, `P` — Paste (in Visual mode, pastes at the corresponding end of selection).
@@ -148,6 +150,7 @@ require("helix").setup({
 #### Text Objects
 - `<A-i><obj>` — Select *inside* text object (e.g. `<A-i>w` for inner word, `<A-i>"` for inside quotes).
 - `<A-a><obj>` — Select *around* text object (e.g. `<A-a>w` around word).
+- `i'`, `a'` — Select inside / around single-quote text object (`''`).
 
 ---
 
@@ -166,15 +169,23 @@ require("helix").setup({
 
 ---
 
-## 🛠️ Local Development
+## 🛠️ Local Development (LazyVim / lazy.nvim)
 
-A development runner script is provided in `./dev`:
+To test and develop `helix.nvim` locally in your Neovim / LazyVim setup, point your plugin specification directly to the local directory:
 
-```bash
-./dev/dev.sh [file]
+```lua
+-- ~/.config/nvim/lua/plugins/helix.lua
+return {
+  "VyTrg/helix.nvim",
+  dir = "~/Documents/helix.nvim",
+  dependencies = { "folke/which-key.nvim" },
+  event = "VeryLazy",
+  opts = {
+    full = true,
+    which_key_integration = true,
+  },
+}
 ```
-
-This launches a clean, isolated Neovim instance with `helix.nvim` loaded from the local repository.
 
 ---
 
