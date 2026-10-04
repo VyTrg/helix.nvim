@@ -100,57 +100,71 @@ require("helix").setup({
 
 ## ⌨️ Keybindings Reference
 
-### Core Actions (Normal Mode)
-
-| Key | Helix Action | Neovim Equivalent | Description |
-|:---:|:---|:---|:---|
-| `c` | Change | `vc` | Select current character and enter insert mode |
-| `d` | Delete | `vd` | Delete current character/selection |
-| `x` | Select Line | `V` | Select the current line (or expand selection by lines) |
-| `y` | Yank | `vy` | Yank current character/selection |
-
-### Navigation & Selections (`full = true`)
-
-#### Basic Movement
-- `h`, `j`, `k`, `l` — Move cursor (clears current visual selection before moving).
-- `H`, `J`, `K`, `L` — **Extend** selection left, down, up, or right.
-
-#### Word Motions
-- `w`, `e`, `b` — Move to and select next word start, word end, or previous word start.
-- `W`, `E`, `B` — **Extend** selection to next word start, word end, or previous word start.
-- `<A-w>`, `<A-e>`, `<A-b>` — WORD (whitespace-delimited) variants: select / extend.
-
-#### Character Search
-- `f<char>` — Find `<char>` forward (creates selection to character).
-- `t<char>` — Till `<char>` forward (creates selection up to character).
-- `F<char>`, `T<char>` — **Extend** selection forward to / till `<char>`.
-- `<A-f><char>`, `<A-t><char>` — Find / till backward (extends selection).
-
-#### Line & Buffer Navigation
-- `<A-h>`, `<A-l>` — Select from cursor to start (`0`) or end (`$`) of line.
-- `gh`, `gl` — Go to start or end of line (exits visual selection first).
-- `Gh`, `Gl` — **Extend** selection to start or end of line.
-- `gg`, `ge` — Go to buffer start or buffer end.
-- `Gg`, `Ge` — **Extend** selection to buffer start or buffer end.
-- `gj`, `gk` — Jump to buffer bottom or buffer top.
-- `Gj`, `Gk` — **Extend** selection to buffer bottom or buffer top.
-- `gt`, `gc`, `gb` — Go to top, center, or bottom of screen view.
-- `Gt`, `Gc`, `Gb` — **Extend** selection to top, center, or bottom of screen view.
-- `%` — **Select all** buffer (`ggVG`).
-
-#### Manipulation & Paste
-- `<C-c>` — Toggle comment on current line (`gcc` in Normal mode) or selection (`gc` in Visual mode).
-- `<A-j>` — Join lines (`J`).
-- `<A-;>` — Flip selection cursor (move cursor to the other end of the selection).
-- `p`, `P` — Paste (in Visual mode, pastes at the corresponding end of selection).
-- `R` — In Normal mode: replace character with clipboard; in Visual mode: replace entire selection with clipboard.
-- `o`, `O` — Open newline below / above.
-- `<A-o>`, `<A-O>` — Add newline below / above without moving cursor / disturbing selection.
-
-#### Text Objects
-- `<A-i><obj>` — Select *inside* text object (e.g. `<A-i>w` for inner word, `<A-i>"` for inside quotes).
-- `<A-a><obj>` — Select *around* text object (e.g. `<A-a>w` around word).
-- `i'`, `a'` — Select inside / around single-quote text object (`''`).
+| Key        | Description | Mode           |
+| :--------- | :---------- | :------------- |
+| `c`        | Select current character and enter insert mode (`vc`) | normal |
+| `d`        | Delete current character or visual selection (`vd`) | normal |
+| `x`        | Select current line / expand selection linewise (`V`) | normal, visual |
+| `y`        | Yank current character or visual selection (`vy`) | normal |
+| `h`        | Move cursor left (clears visual selection) | normal, visual |
+| `j`        | Move cursor down (clears visual selection) | normal, visual |
+| `k`        | Move cursor up (clears visual selection) | normal, visual |
+| `l`        | Move cursor right (clears visual selection) | normal, visual |
+| `H`        | Extend selection left | normal, visual |
+| `J`        | Extend selection down | normal, visual |
+| `K`        | Extend selection up | normal, visual |
+| `L`        | Extend selection right | normal, visual |
+| `w`        | Move to next word start (creates selection) | normal, visual |
+| `e`        | Move to next word end (creates selection) | normal, visual |
+| `b`        | Move to previous word start (creates selection) | normal, visual |
+| `W`        | Extend selection to next word start | normal, visual |
+| `E`        | Extend selection to next word end | normal, visual |
+| `B`        | Extend selection to previous word start | normal, visual |
+| `<A-w>`    | Move to next WORD (whitespace-delimited) start (creates selection) | normal, visual |
+| `<A-e>`    | Move to next WORD end (creates selection) | normal, visual |
+| `<A-b>`    | Move to previous WORD start (creates selection) | normal, visual |
+| `f`        | Find character forward (creates selection to character) | normal, visual |
+| `t`        | Till character forward (creates selection up to character) | normal, visual |
+| `F`        | Extend selection forward to character | normal, visual |
+| `T`        | Extend selection forward till character | normal, visual |
+| `<A-f>`    | Find character backward (extends selection) | normal, visual |
+| `<A-t>`    | Till character backward (extends selection) | normal, visual |
+| `<A-h>`    | Select from cursor to start of line (`0`) | normal, visual |
+| `<A-l>`    | Select from cursor to end of line (`$`) | normal, visual |
+| `gh`       | Go to start of line (`0`, clears visual selection) | normal, visual |
+| `gl`       | Go to end of line (`$`, clears visual selection) | normal, visual |
+| `Gh`       | Extend selection to start of line (`0`) | normal, visual |
+| `Gl`       | Extend selection to end of line (`$`) | normal, visual |
+| `gg`       | Go to buffer start (clears visual selection) | normal, visual |
+| `ge`       | Go to buffer end (clears visual selection) | normal, visual |
+| `Gg`       | Extend selection to buffer start | normal, visual |
+| `Ge`       | Extend selection to buffer end | normal, visual |
+| `gj`       | Jump to buffer bottom / last line (clears visual selection) | normal, visual |
+| `gk`       | Jump to buffer top / first line (clears visual selection) | normal, visual |
+| `Gj`       | Extend selection to buffer bottom / last line | normal, visual |
+| `Gk`       | Extend selection to buffer top / first line | normal, visual |
+| `gt`       | Go to top of screen view (`H`, clears visual selection) | normal, visual |
+| `gc`       | Go to center of screen view (`M`, clears visual selection) | normal, visual |
+| `gb`       | Go to bottom of screen view (`L`, clears visual selection) | normal, visual |
+| `Gt`       | Extend selection to top of screen view (`H`) | normal, visual |
+| `Gc`       | Extend selection to center of screen view (`M`) | normal, visual |
+| `Gb`       | Extend selection to bottom of screen view (`L`) | normal, visual |
+| `G`        | Goto extend prefix / Which-Key menu | normal, visual |
+| `%`        | Select entire buffer (`ggVG`) | normal, visual |
+| `<C-c>`    | Toggle comment on current line (`gcc`) or selection (`gc`) | normal, visual |
+| `<A-j>`    | Join lines (`J`) | normal, visual |
+| `<A-;>`    | Flip selection cursor to opposite end of selection | visual |
+| `p`        | Paste after cursor / at selection end | visual |
+| `P`        | Paste before cursor / at selection start | visual |
+| `R`        | Replace character or selection with clipboard content | normal, visual |
+| `o`        | Open newline below and move to selection end | visual |
+| `O`        | Open newline above and move to selection start | visual |
+| `<A-o>`    | Add newline below without moving cursor or selection | normal, visual |
+| `<A-O>`    | Add newline above without moving cursor or selection | normal, visual |
+| `<A-i>`    | Select inside text object (prompt for object) | normal, visual |
+| `<A-a>`    | Select around text object (prompt for object) | normal, visual |
+| `i'`       | Select inside single quotes | visual, operator-pending |
+| `a'`       | Select around single quotes | visual, operator-pending |
 
 ---
 
